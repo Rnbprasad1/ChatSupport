@@ -9,7 +9,6 @@ import { RefundSupport } from '@/components/support/RefundSupport';
 import { EmergencySupport } from '@/components/support/EmergencySupport';
 import { updateChatStatus } from '@/lib/firebase-utils';
 
-
 interface Message {
   id: string;
   text: string;
@@ -23,7 +22,6 @@ interface ChatWindowProps {
   onClose: () => void;
   supportType?: 'refund' | 'help' | null;
   orderDetails?: any;
-  
 }
 
 export function ChatWindow({
@@ -31,13 +29,11 @@ export function ChatWindow({
   userName,
   onClose,
   supportType,
-  orderDetails
-
+  orderDetails,
 }: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const newStatusRef = useRef('');
-
 
   useEffect(() => {
     const q = query(
@@ -54,10 +50,9 @@ export function ChatWindow({
     });
 
     return () => {
-      // Skip status update if the chat is already closed
-      if (newStatusRef.current !== "closed") {
+      if (newStatusRef.current !== 'closed') {
         updateDoc(doc(db, 'chats', chatId), {
-          status: newStatusRef.current === '' ? status : newStatusRef.current,
+          status: newStatusRef.current === '' ? 'open' : newStatusRef.current,
           closedAt: serverTimestamp(),
         });
       }
@@ -82,37 +77,39 @@ export function ChatWindow({
   };
 
   const handleClose = async () => {
-    newStatusRef.current = 'closed'; // Ensure the ref is also updated
-    await updateChatStatus(chatId, "closed");
+    newStatusRef.current = 'closed';
+    await updateChatStatus(chatId, 'closed');
     onClose();
   };
 
   return (
-    <div className="flex flex-col h-[600px] w-full max-w-md bg-white rounded-lg shadow-lg">
-      <div className="flex items-center justify-between p-4 border-b">
+    <div className="flex flex-col h-screen md:h-[700px] w-full md:max-w-3xl lg:max-w-4xl mx-auto bg-white rounded-lg shadow-lg md:shadow-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b bg-gray-50">
         <h3 className="text-lg font-semibold">Chat Support</h3>
         <Button
           onClick={handleClose}
-          className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
+          className="flex items-center justify-center p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
           aria-label="Close"
         >
-          <X className="h-5 w-5 text-gray-600 hover:text-primary" />
+          <X className="h-5 w-5 text-[#800000] hover:text-[#800000]" />
         </Button>
       </div>
 
+      {/* Support Details */}
       {supportType === 'refund' && orderDetails && (
         <div className="px-4 pt-4">
           <RefundSupport orderId={orderDetails.orderId} amount={orderDetails.totalAmount} />
         </div>
       )}
-
       {supportType === 'help' && (
         <div className="px-4 pt-4">
           <EmergencySupport />
         </div>
       )}
 
-      <ScrollArea className="flex-1 p-4">
+      {/* Message Area */}
+      <ScrollArea className="flex-1 p-4 bg-gray-50">
         <div className="space-y-4">
           {messages.map((message) => (
             <div
@@ -121,22 +118,21 @@ export function ChatWindow({
                 }`}
             >
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${message.sender === userName
+                className={`max-w-[80%] md:max-w-[70%] lg:max-w-[60%] rounded-lg p-3 ${message.sender === userName
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted'
+                    : 'bg-gray-200'
                   }`}
               >
                 <p className="text-sm">{message.text}</p>
-                <span className="text-xs opacity-70">
-                  {message.sender}
-                </span>
+                <span className="text-xs opacity-70">{message.sender}</span>
               </div>
             </div>
           ))}
         </div>
       </ScrollArea>
 
-      <form onSubmit={sendMessage} className="p-4 border-t">
+      {/* Input Area */}
+      <form onSubmit={sendMessage} className="p-4 border-t bg-white">
         <div className="flex gap-2">
           <Input
             value={newMessage}
@@ -144,7 +140,11 @@ export function ChatWindow({
             placeholder="Type your message..."
             className="flex-1"
           />
-          <Button type="submit" size="icon">
+          <Button
+            type="submit"
+            size="icon"
+            className="bg-primary text-white hover:bg-primary-dark"
+          >
             <Send className="h-4 w-4" />
           </Button>
         </div>
