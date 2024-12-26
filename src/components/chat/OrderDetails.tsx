@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Payment } from '@/types/payment';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';

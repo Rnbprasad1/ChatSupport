@@ -7,13 +7,6 @@ import { ChatWindow } from '@/components/chat/ChatWindow';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, LogIn } from 'lucide-react';
 
-interface ChatSession {
-  id: string;
-  userName: string;
-  supportType?: 'refund' | 'help' | null;
-  orderDetails?: any;
-  status?: string;
-}
 
 export function Home() {
   const [chatId, setChatId] = useState<string | null>(null);

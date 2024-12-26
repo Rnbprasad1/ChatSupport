@@ -144,7 +144,7 @@ export function Admin() {
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 text-sm opacity-70">
-                      {getSupportTypeIcon(chat.supportType)}
+                      {getSupportTypeIcon(chat?.supportType as string)}
                       <span>
                         {chat.supportType ? chat.supportType.toUpperCase() : 'General'}
                       </span>

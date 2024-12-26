@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
-import { Payment } from '@/types/payment';
-import { RefundItem } from '@/types/refund';
-import { RefundItemSelector } from './RefundItemSelector';
 import { createRefundRequest } from '@/lib/firebase-utils';
 
 interface RefundSupportProps {
